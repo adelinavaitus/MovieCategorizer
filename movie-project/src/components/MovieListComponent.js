@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Media} from 'reactstrap';
+import {Media, Row, Col, Modal, ModalHeader, ModalBody, Card} from 'reactstrap';
 
 class MovieList extends Component{
 
@@ -7,8 +7,19 @@ class MovieList extends Component{
         super(props);
 
         this.state = {
-            movies: []
+            movies: [],
+            isModalMovieOpen: false,
+            selectedMovie: null
         };
+
+        this.toggleModalMovie = this.toggleModalMovie.bind(this);
+    }
+
+    toggleModalMovie(movie){
+        this.setState({
+            isModalMovieOpen: !this.state.isModalMovieOpen,
+            selectedMovie: movie
+        });
     }
 
     componentDidMount(){
@@ -29,29 +40,68 @@ class MovieList extends Component{
 
     render(){
 
-        const menu = this.state.movies.map((movie)=> {
+        const movies = this.state.movies;
+        const selectedMovie = this.state.selectedMovie;
+
+        // Diveded the movies into groups of 4 
+        const movieGroups = movies.reduce((resultMovieArray, item, index) => {
+            const groupIndex = Math.floor(index/4);
+
+            if(!resultMovieArray[groupIndex]){
+                resultMovieArray[groupIndex] = [];
+            }
+
+            resultMovieArray[groupIndex].push(item);
+
+            return resultMovieArray;
+        }, []);
+
+        // We render each chunk in a separate row
+        const movieRows = movieGroups.map((group, index)=> {
             return (
-                <div key={movie.id} className='col-12 mt-5'>
-                    <Media tag="li">
-                        <Media body className='ml-5'>
-                            <Media left middle>
-                                <Media object src= {`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.original_title} />
-                            </Media>
+                <Row key={index} className='mt-4'>
+                    {group.map(movie => (
+                    <Col key={movie.id} sm="3">
+                        <Media left middle>
+                            <Media onClick={() => this.toggleModalMovie(movie)} object src= {`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.original_title} />
+                        </Media>
+                        <Media body className='ml-3'>
                             <Media heading>{movie.original_title}</Media>
                             <p>{movie.overview}</p>
                         </Media>
-                    </Media>
-                </div>
+                    </Col>
+                    ))}
+                </Row>
             );
         });
 
         return(
             <div className="container">
-                <div className="row">
-                    <Media list>
-                        {menu}
-                    </Media>
-                </div>
+                <Media list>
+                    {movieRows}
+                </Media>
+
+                <Modal isOpen={this.state.isModalMovieOpen}>
+                    <ModalHeader toggle={this.toggleModalMovie}>{selectedMovie ? selectedMovie.original_title: null}</ModalHeader>
+                    <ModalBody>
+                        <Row>
+                            <Col>
+                                <Media object src={`https://image.tmdb.org/t/p/w200${selectedMovie? selectedMovie.poster_path : null}`} alt={selectedMovie? selectedMovie.original_title:null} />
+                            </Col>
+                            <Col>
+                                <Row>
+                                    <Card>Genres: </Card>
+                                </Row>
+                                <Row>
+                                    <Card>Release date: {selectedMovie? selectedMovie.release_date : null}</Card>
+                                </Row>
+                                <Row>
+                                    <Card>Description: {selectedMovie? selectedMovie.overview : null}</Card>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }
