@@ -63,6 +63,13 @@ class MovieList extends Component {
         }
     }
 
+    handleKeyDown = (event) => {
+        if(event.key === "Enter"){
+            event.preventDefault();
+            this.handleSearch();
+        }
+    }
+
     searchTitle() {
         const searchedMovies = this.state.movies.filter((movie) =>
             movie.title.toLowerCase().includes(this.state.inputValue.toLowerCase()));
@@ -165,7 +172,7 @@ class MovieList extends Component {
                 <Form>
                     <div className='form-container'>
                         <Dropdown isOpen={isDropDownOpen} toggle={this.toggleDropdown}>
-                            <DropdownToggle caret>{selectedOption ? selectedOption : "Select an option"}</DropdownToggle>
+                            <DropdownToggle caret>{selectedOption ? selectedOption : "Title"}</DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptions.TITLE)}>{DropdownOptions.TITLE}</DropdownItem>
                                 <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptions.RELEASE_DATE)}>{DropdownOptions.RELEASE_DATE}</DropdownItem>
@@ -173,7 +180,7 @@ class MovieList extends Component {
                             </DropdownMenu>
                         </Dropdown>
 
-                        <Input value={this.state.inputValue} onChange={this.handleInputChange} />
+                        <Input value={this.state.inputValue} onChange={this.handleInputChange} onKeyDown={this.handleKeyDown}/>
                         <Button onClick={this.handleSearch}>Search</Button>
                     </div>
                 </Form>
