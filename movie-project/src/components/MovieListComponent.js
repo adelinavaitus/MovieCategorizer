@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Media, Row, Col, Modal, ModalHeader, ModalBody, Button, Card, Dropdown, Form, DropdownToggle, Input, DropdownItem, DropdownMenu, FormGroup } from 'reactstrap';
 import { DropdownOptions } from './DropdownOptions';
+import Pagination from './Pagination';
 
 class MovieList extends Component {
 
@@ -16,10 +17,13 @@ class MovieList extends Component {
             selectedMovie: null,
             selectedOption: '',
             inputValue: '',
+            startDisplayIndex: 0,
+            numberOfMovies: 8,
 
         };
 
         this.toggleModalMovie = this.toggleModalMovie.bind(this);
+        this.setStartDisplayIndex = this.setStartDisplayIndex.bind(this);
     }
 
     toggleModalMovie(movie) {
@@ -47,6 +51,10 @@ class MovieList extends Component {
         });
     };
 
+    setStartDisplayIndex(startDisplayIndex) {
+        this.setState({ startDisplayIndex })
+    }
+
     handleSearch = () => {
         switch (this.state.selectedOption) {
             case DropdownOptions.TITLE:
@@ -64,7 +72,7 @@ class MovieList extends Component {
     }
 
     handleKeyDown = (event) => {
-        if(event.key === "Enter"){
+        if (event.key === "Enter") {
             event.preventDefault();
             this.handleSearch();
         }
@@ -84,9 +92,9 @@ class MovieList extends Component {
         this.setState({ searchedMovies });
     }
 
-    searchGenre(){
-        const searchedGenre = this.state.genres.filter((genre) => 
-             genre.name.toLowerCase().includes(this.state.inputValue.toLowerCase()));
+    searchGenre() {
+        const searchedGenre = this.state.genres.filter((genre) =>
+            genre.name.toLowerCase().includes(this.state.inputValue.toLowerCase()));
 
         const searchedMovies = this.state.movies.filter(movie =>
             movie.genre_ids.some(movieGenreId =>
@@ -133,9 +141,14 @@ class MovieList extends Component {
         const genres = this.state.genres;
         const isDropDownOpen = this.state.isDropDownOpen;
         const selectedOption = this.state.selectedOption;
+        const startDisplayIndex = this.state.startDisplayIndex;
+        const numberOfMovies = this.state.numberOfMovies;
+
+        const moviesPerPage = searchedMovies.filter((movies, index) =>
+            index >= startDisplayIndex && index < startDisplayIndex + numberOfMovies)
 
         // Diveded the movies into groups of 4 
-        const movieGroups = searchedMovies.reduce((resultMovieArray, item, index) => {
+        const movieGroups = moviesPerPage.reduce((resultMovieArray, item, index) => {
             const groupIndex = Math.floor(index / 4);
 
             if (!resultMovieArray[groupIndex]) {
@@ -180,7 +193,7 @@ class MovieList extends Component {
                             </DropdownMenu>
                         </Dropdown>
 
-                        <Input value={this.state.inputValue} onChange={this.handleInputChange} onKeyDown={this.handleKeyDown}/>
+                        <Input value={this.state.inputValue} onChange={this.handleInputChange} onKeyDown={this.handleKeyDown} />
                         <Button onClick={this.handleSearch}>Search</Button>
                     </div>
                 </Form>
@@ -188,6 +201,13 @@ class MovieList extends Component {
                 <Media list>
                     {movieRows}
                 </Media>
+
+                <Pagination
+                    moviesLength={searchedMovies.length}
+                    startDisplayIndex={startDisplayIndex}
+                    numberOfMovies={numberOfMovies}
+                    setStartDisplayIndex={this.setStartDisplayIndex}
+                />
 
                 <Modal isOpen={this.state.isModalMovieOpen}>
                     {
