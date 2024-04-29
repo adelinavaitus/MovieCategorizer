@@ -1,15 +1,14 @@
 import logo from './logo.svg';
-import {Nav, Navbar, NavbarBrand} from 'reactstrap';
+import { Nav, Navbar, NavbarBrand } from 'reactstrap';
 import MovieList from './components/MovieListComponent';
 import './App.css';
 import { Component } from 'react';
 
-class App extends Component
-{
-  render(){
+class App extends Component {
+  render() {
     return (
       <div>
-        <Navbar dark color="primary">
+        <Navbar dark>
           <div className="container">
             <NavbarBrand href="/">Movie Application</NavbarBrand>
           </div>

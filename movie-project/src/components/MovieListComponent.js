@@ -56,6 +56,10 @@ class MovieList extends Component {
     }
 
     handleSearch = () => {
+        this.setState({
+            startDisplayIndex: 0
+        })
+
         switch (this.state.selectedOption) {
             case DropdownOptions.TITLE:
                 this.searchTitle();
@@ -185,7 +189,7 @@ class MovieList extends Component {
                 <Form>
                     <div className='form-container'>
                         <Dropdown isOpen={isDropDownOpen} toggle={this.toggleDropdown}>
-                            <DropdownToggle caret>{selectedOption ? selectedOption : "Title"}</DropdownToggle>
+                            <DropdownToggle className="dropdown" caret>{selectedOption ? selectedOption : "Title"}</DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptions.TITLE)}>{DropdownOptions.TITLE}</DropdownItem>
                                 <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptions.RELEASE_DATE)}>{DropdownOptions.RELEASE_DATE}</DropdownItem>
@@ -193,8 +197,8 @@ class MovieList extends Component {
                             </DropdownMenu>
                         </Dropdown>
 
-                        <Input value={this.state.inputValue} onChange={this.handleInputChange} onKeyDown={this.handleKeyDown} />
-                        <Button onClick={this.handleSearch}>Search</Button>
+                        <Input className='searchInput' value={this.state.inputValue} onChange={this.handleInputChange} onKeyDown={this.handleKeyDown} placeholder='Search...' />
+                        <Button className="searchButton" onClick={this.handleSearch}>Search</Button>
                     </div>
                 </Form>
 
