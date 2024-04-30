@@ -7,10 +7,10 @@ function MenuPage(props) {
     return (
         <Navbar dark>
             <div className="navbar-container">
-                <div className="left-links">
+                <div className="left-element">
                     <Link to="/" className="navbar-link">Movie Aplication</Link>
                 </div>
-                <div className="right-links">
+                <div className="right-element">
                     <Link to="/favorites" className="navbar-link">Favorites</Link>
                 </div>
             </div>

@@ -89,3 +89,24 @@
  .center {
   text-align: center;
 }
+
+.movie-overview{
+  max-height: 160px;
+  overflow: hidden;
+}
+
+.read-more{
+  color:blue;
+  text-decoration: underline;
+  cursor:pointer
+}
+
+.read-more:hover{
+  text-decoration: none;
+}
+
+.readmore-container{
+  display: flex;
+  justify-content: space-between; 
+  width: 80%;
+}

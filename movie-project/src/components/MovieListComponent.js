@@ -195,10 +195,19 @@ class MovieList extends Component {
                                 <Media onClick={() => this.toggleModalMovie(movie)} object src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
                             </Media>
                             <Media body className='ml-3'>
-                                <Media heading>{movie.title}</Media>
-                                <p>{movie.overview}</p>
+                                <div className='movie-overview'>
+                                    <Media heading>{movie.title}</Media>
+                                    <p >{movie.overview}</p>
+                                </div>
+                                <div className="readmore-container">
+                                    <div className="left-element">
+                                        <p className='read-more' onClick={() => this.toggleModalMovie(movie)}>Read more</p>
+                                    </div>
+                                    <div className="right-element">
+                                        {favoriteButton(movie)}
+                                    </div>
+                                </div>
                             </Media>
-                            {favoriteButton(movie)}
                         </Col>
                     ))}
                 </Row>
