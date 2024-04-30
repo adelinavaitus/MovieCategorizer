@@ -44,3 +44,48 @@
   .navbar{
     background-color: #04c46e;
   }
+
+  .navbar-link {
+    color: white;
+    text-decoration: none;
+  }
+
+  .navbar-container {
+    display: flex;
+    justify-content: space-between; 
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .left-links {
+    display: flex;
+    align-items: center; 
+  }
+  
+  .right-links {
+    display: flex;
+    align-items: center; 
+  }
+
+ .favorite-button-heart{
+    color: #fe0b0b;
+ }
+
+ .favorite-button{
+  background-color: white;
+  border: 0;
+ }
+
+ .favorite-button-remove{
+  background-color: white;
+  border: 2px solid black;
+ }
+
+ .favorite-button-remove:hover{
+  background-color: #c7c7c7;
+
+ }
+
+ .center {
+  text-align: center;
+}

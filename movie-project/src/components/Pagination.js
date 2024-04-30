@@ -14,7 +14,6 @@ function Pagination(props) {
                 : <Button className="pagination-button" disabled type="button">Next</Button>}
         </div>
     )
-
 }
 
 export default Pagination;

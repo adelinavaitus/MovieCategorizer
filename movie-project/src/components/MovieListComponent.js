@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import { Media, Row, Col, Modal, ModalHeader, ModalBody, Button, Card, Dropdown, Form, DropdownToggle, Input, DropdownItem, DropdownMenu, FormGroup } from 'reactstrap';
 import { DropdownOptions } from './DropdownOptions';
 import Pagination from './Pagination';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as solidFaHeart } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faHeart);
+library.add(solidFaHeart);
 
 class MovieList extends Component {
 
@@ -147,6 +154,20 @@ class MovieList extends Component {
         const selectedOption = this.state.selectedOption;
         const startDisplayIndex = this.state.startDisplayIndex;
         const numberOfMovies = this.state.numberOfMovies;
+        const { favoriteMovies, addToFavorite, removeFromFavorites } = this.props;
+
+        const favoriteButton = (movie) => {
+            return (
+                favoriteMovies.some(favMovie => favMovie.id === movie.id) ?
+                    <button className='favorite-button' onClick={() => removeFromFavorites(movie)}>
+                        <FontAwesomeIcon className="favorite-button-heart" icon={solidFaHeart} size='xl' />
+                    </button>
+                    :
+                    <button className='favorite-button' onClick={() => addToFavorite(movie)}>
+                        <FontAwesomeIcon className="favorite-button-heart" icon={faHeart} size='xl' />
+                    </button>
+            );
+        }
 
         const moviesPerPage = searchedMovies.filter((movies, index) =>
             index >= startDisplayIndex && index < startDisplayIndex + numberOfMovies)
@@ -177,6 +198,7 @@ class MovieList extends Component {
                                 <Media heading>{movie.title}</Media>
                                 <p>{movie.overview}</p>
                             </Media>
+                            {favoriteButton(movie)}
                         </Col>
                     ))}
                 </Row>
@@ -222,6 +244,7 @@ class MovieList extends Component {
                                     <Row>
                                         <Col>
                                             <Media object src={`https://image.tmdb.org/t/p/w200${selectedMovie.poster_path}`} alt={selectedMovie.title} />
+                                            {favoriteButton(selectedMovie)}
                                         </Col>
                                         <Col>
                                             <Row>
