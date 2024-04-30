@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { NavItem, Navbar, NavbarBrand } from 'reactstrap';
+import { Navbar } from 'reactstrap';
 
 
 function MenuPage(props) {

@@ -10,8 +10,23 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      favoriteMovies: []
+      favoriteMovies: [],
+      genres: []
     }
+  }
+
+  componentDidMount() {
+    const API_KEY = process.env.REACT_APP_API_KEY;
+    const GENRE_URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`;
+
+    fetch(GENRE_URL)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ genres: data.genres });
+      })
+      .catch(error => {
+        console.error('Error fetching genres from API:', error);
+      });
   }
 
   addToFavorite = (movie) => {
@@ -21,8 +36,6 @@ class App extends Component {
         favoriteMovies: [...prevState.favoriteMovies, movie]
       }));
     }
-
-    console.log(this.state.favoriteMovies);
   }
 
   removeFromFavorites = (movie) => {
@@ -39,13 +52,16 @@ class App extends Component {
     return (
       <Router>
         <div>
-         <MenuPage />
+          <MenuPage />
           <Routes>
             <Route path="/" element={<MovieList favoriteMovies={this.state.favoriteMovies}
               addToFavorite={this.addToFavorite}
-              removeFromFavorites={this.removeFromFavorites} />} />
+              removeFromFavorites={this.removeFromFavorites}
+              genres={this.state.genres} />} />
             <Route path="/favorites" element={<Favorites favoriteMovies={this.state.favoriteMovies}
-            removeFromFavorites={this.removeFromFavorites}/>} />
+              addToFavorite={this.addToFavorite}
+              removeFromFavorites={this.removeFromFavorites}
+              genres={this.state.genres} />} />
           </Routes>
         </div>
       </Router>
