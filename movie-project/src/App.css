@@ -15,7 +15,7 @@
     margin-left: 20px;
   }
 
-  .pagination-button:hover, .dropdown:hover, .searchButton:hover{
+  .pagination-button:hover, .dropdown-toggle:hover, .searchButton:hover{
     background-color: #2bf098;
   }
 
@@ -25,8 +25,19 @@
     justify-content: center;
   }
 
-  .dropdown {
+  .dropdown-menu-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+  .dropdown-toggle {
     width: 150px;
+    background-color: #04c46e;
+  }
+
+  .dropdown-date{
+    width: 200px;
     background-color: #04c46e;
   }
 
@@ -67,8 +78,13 @@
     align-items: center; 
   }
 
+  .favorite-link{
+    margin-right: 5px;
+  }
+
  .favorite-button-heart{
     color: #fe0b0b;
+
  }
 
  .favorite-button{
