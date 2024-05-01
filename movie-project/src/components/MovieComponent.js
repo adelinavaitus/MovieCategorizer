@@ -7,27 +7,32 @@ class MovieComponent extends Component {
     constructor(props) {
         super(props);
 
+        //Initialize component state
         this.state = {
-            selectedMovie: null,
-            startDisplayIndex: 0,
-            numberOfMoviesPerPage: 8
+            selectedMovie: null,        // Hold the selected movie for the modal
+            startDisplayIndex: 0,       // Holds the starting index of displayed movies for pagination
+            numberOfMoviesPerPage: 8    // Number of movies to display per page
         }
 
+        // Bind the methods to the component context
         this.toggleModalMovie = this.toggleModalMovie.bind(this);
         this.setStartDisplayIndex = this.setStartDisplayIndex.bind(this);
     }
 
+    // Function to toggle the movie modal
     toggleModalMovie(movie) {
         this.setState({
-            isModalMovieOpen: !this.state.isModalMovieOpen,
-            selectedMovie: movie
+            isModalMovieOpen: !this.state.isModalMovieOpen,     // Toggle the modal state
+            selectedMovie: movie    // Set the selected movie
         });
     }
 
+    // Function to set the starting display index for paginatiin
     setStartDisplayIndex(startDisplayIndex) {
         this.setState({ startDisplayIndex })
     }
 
+    // Function to reset pagination when called
     handlePaginationReset = (startDisplayIndex) => {
         this.setState({ startDisplayIndex });
     }
@@ -37,10 +42,11 @@ class MovieComponent extends Component {
         const { movies, favoriteMovies, addToFavorite, removeFromFavorites, genres } = this.props;
         const { numberOfMoviesPerPage, startDisplayIndex } = this.state;
 
+        // Filter movies based on pagination settings
         const moviesPerPage = movies.filter((movies, index) =>
             index >= startDisplayIndex && index < startDisplayIndex + numberOfMoviesPerPage)
 
-        // Diveded the movies into groups of 4 
+        // Divide the movies into groups of 4 
         const movieGroups = moviesPerPage.reduce((resultMovieArray, item, index) => {
             const groupIndex = Math.floor(index / 4);
 
@@ -53,7 +59,7 @@ class MovieComponent extends Component {
             return resultMovieArray;
         }, []);
 
-        // We render each chunk in a separate row
+        // We render each chunk of movies in a separate row
         const movieRows = movieGroups.map((group, index) => {
             return (
                 <Row key={index} className='mt-4'>
@@ -91,6 +97,7 @@ class MovieComponent extends Component {
             <div className='container'>
                 {movieRows}
 
+                {/* Render pagination component if movies exist and exceed the number of movies per page */}
                 {
                     movies && movies.length > numberOfMoviesPerPage ?
                         <Pagination
@@ -102,6 +109,7 @@ class MovieComponent extends Component {
                         : null
                 }
 
+                {/* Movie modal */}
                 <Modal isOpen={this.state.isModalMovieOpen}>
                     {
                         selectedMovie ? (
