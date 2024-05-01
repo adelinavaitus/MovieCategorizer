@@ -12,7 +12,6 @@ class MovieList extends Component {
         this.state = {
             movies: [],                 // Holds the list of movies fetched from API
             searchedMovies: [],         // Hold the list of searched movies
-            isModalMovieOpen: false,    // Flag to indicate if the movie modal is open
             isDropDownOpen: false,      // Flag to indicate if the dropdown is open
             selectedOption: '',         // Hold the selected search option
             inputValue: '',             // Holds the value entered in the search input

@@ -11,7 +11,8 @@ class MovieComponent extends Component {
         this.state = {
             selectedMovie: null,        // Hold the selected movie for the modal
             startDisplayIndex: 0,       // Holds the starting index of displayed movies for pagination
-            numberOfMoviesPerPage: 8    // Number of movies to display per page
+            numberOfMoviesPerPage: 8,    // Number of movies to display per page
+            isModalMovieOpen: false,    // Flag to indicate if the movie modal is open
         }
 
         // Bind the methods to the component context
@@ -35,6 +36,27 @@ class MovieComponent extends Component {
     // Function to reset pagination when called
     handlePaginationReset = (startDisplayIndex) => {
         this.setState({ startDisplayIndex });
+    }
+
+    // Add event listener for mouse down event when component mounts
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    // Remove event listener for mouse down event when component unmounts
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        // Find the modal content element
+        const modal = document.querySelector('.modal-content');
+
+        // Check if modal exists and the clicked element is not a child of the modal
+        if (modal && !modal.contains(event.target)) {
+            // If clicked outside the modal, close the modal
+            this.toggleModalMovie(null);
+        }
     }
 
     render() {
