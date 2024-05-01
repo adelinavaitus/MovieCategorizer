@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, Form, DropdownToggle, Input, DropdownItem, DropdownMenu } from 'reactstrap';
-import { DropdownOptions } from './DropdownOptions';
+import { DropdownOptionsSearch, DropdownOptionsOrder } from './DropdownOptions';
 import MovieComponent from './MovieComponent';
 
 class MovieList extends Component {
@@ -12,8 +12,10 @@ class MovieList extends Component {
         this.state = {
             movies: [],                 // Holds the list of movies fetched from API
             searchedMovies: [],         // Hold the list of searched movies
-            isDropDownOpen: false,      // Flag to indicate if the dropdown is open
-            selectedOption: '',         // Hold the selected search option
+            isDropDownOpen: false,      // Flag to indicate if the search dropdown is open
+            isDropDownOpenDate: false,  // Flag to indicate if the order dropdown is open
+            selectedOption: '',         // Holds the selected search option
+            selectedOptionDate: '',     // Holds the selected date order option
             inputValue: '',             // Holds the value entered in the search input
         };
     }
@@ -25,10 +27,33 @@ class MovieList extends Component {
         }));
     };
 
-    // Function to handle the selection of search option
+    // Function to toggle the dropdown
+    toggleDropdownDate = () => {
+        this.setState((prevState) => ({
+            isDropDownOpenDate: !prevState.isDropDownOpenDate
+        }));
+    };
+
+    // Function to handle the selection of search options
     handleOptionSelect = (option) => {
         this.setState({
             selectedOption: option
+        });
+    };
+
+    // Function tp handle the selection of dropdown options
+    handleOptionSelectOrder = (option) => {
+        this.setState({
+            selectedOptionDate: option
+        });
+
+        let searchedMovies = this.state.searchedMovies;
+
+        // Apply sorting to the searched movies list based on the selected option
+        searchedMovies = this.handleDataOrder(option, searchedMovies);
+
+        this.setState({
+            searchedMovies: searchedMovies
         });
     };
 
@@ -45,18 +70,48 @@ class MovieList extends Component {
 
         // Handle search based on the selected option
         switch (this.state.selectedOption) {
-            case DropdownOptions.TITLE:
+            case DropdownOptionsSearch.TITLE:
                 this.searchTitle();
                 break;
-            case DropdownOptions.RELEASE_DATE:
-                this.searchReleaseDate();
-                break;
-            case DropdownOptions.GENRE:
+            case DropdownOptionsSearch.GENRE:
                 this.searchGenre();
                 break;
             default:
                 this.searchTitle();
+                break;
         }
+    }
+
+    // Function to handle sorting options for date
+    handleDataOrder = (option, movies) => {
+        switch (option) {
+            case DropdownOptionsOrder.NEW:
+                movies = this.handleOrderDescending(movies);
+                break;
+            case DropdownOptionsOrder.OLD:
+                movies = this.handleOrderAscending(movies);
+                break;
+            default:
+                console.error("Invalid option for date order:", option);
+        }
+
+        return movies;
+    }
+
+    // Function to sort movies in descending order by release order
+    handleOrderDescending(searchedMovies) {
+        const sortedMovies = searchedMovies.sort((movie1, movie2) =>
+            new Date(movie2.release_date) - new Date(movie1.release_date));
+
+        return sortedMovies;
+    }
+
+    // Function to sort movies in ascending order by release date
+    handleOrderAscending(searchedMovies) {
+        const sortedMovies = searchedMovies.sort((movie1, movie2) =>
+            new Date(movie1.release_date) - new Date(movie2.release_date));
+
+        return sortedMovies;
     }
 
     // Function to handle key down event in the search input
@@ -69,16 +124,10 @@ class MovieList extends Component {
 
     // Function to search movies by title
     searchTitle() {
-        const searchedMovies = this.state.movies.filter((movie) =>
+        let searchedMovies = this.state.movies.filter((movie) =>
             movie.title.toLowerCase().includes(this.state.inputValue.toLowerCase()));
 
-        this.setState({ searchedMovies });
-    }
-
-    // Function to search movies by release date
-    searchReleaseDate() {
-        const searchedMovies = this.state.movies.filter((movie) =>
-            movie.release_date.includes(this.state.inputValue));
+        searchedMovies = this.handleDataOrder(this.state.selectedOptionDate, searchedMovies);
 
         this.setState({ searchedMovies });
     }
@@ -88,11 +137,13 @@ class MovieList extends Component {
         const searchedGenre = this.props.genres.filter((genre) =>
             genre.name.toLowerCase().includes(this.state.inputValue.toLowerCase()));
 
-        const searchedMovies = this.state.movies.filter(movie =>
+        let searchedMovies = this.state.movies.filter(movie =>
             movie.genre_ids.some(movieGenreId =>
                 searchedGenre.some(genre => genre.id === movieGenreId)
             )
         );
+
+        searchedMovies = this.handleDataOrder(this.state.selectedOptionDate, searchedMovies);
 
         this.setState({ searchedMovies });
     }
@@ -116,8 +167,7 @@ class MovieList extends Component {
     }
 
     render() {
-        const isDropDownOpen = this.state.isDropDownOpen;
-        const selectedOption = this.state.selectedOption;
+        const { isDropDownOpen, selectedOption, isDropDownOpenDate, selectedOptionDate } = this.state;
         const { favoriteMovies, addToFavorite, removeFromFavorites, genres } = this.props;
 
         return (
@@ -126,12 +176,11 @@ class MovieList extends Component {
                     <div className='form-container'>
                         {/* Dropdown for selecting search option */}
                         <Dropdown isOpen={isDropDownOpen} toggle={this.toggleDropdown}>
-                            <DropdownToggle className="dropdown" caret>{selectedOption ? selectedOption : "Title"}</DropdownToggle>
+                            <DropdownToggle className="dropdown-toggle" caret>{selectedOption ? selectedOption : "Title"}</DropdownToggle>
                             <DropdownMenu>
                                 {/* Dropdown options */}
-                                <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptions.TITLE)}>{DropdownOptions.TITLE}</DropdownItem>
-                                <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptions.RELEASE_DATE)}>{DropdownOptions.RELEASE_DATE}</DropdownItem>
-                                <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptions.GENRE)}>{DropdownOptions.GENRE}</DropdownItem>
+                                <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptionsSearch.TITLE)}>{DropdownOptionsSearch.TITLE}</DropdownItem>
+                                <DropdownItem onClick={() => this.handleOptionSelect(DropdownOptionsSearch.GENRE)}>{DropdownOptionsSearch.GENRE}</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
 
@@ -141,6 +190,18 @@ class MovieList extends Component {
                         <Button className="searchButton" onClick={this.handleSearch}>Search</Button>
                     </div>
                 </Form>
+
+                <div className="dropdown-menu-right">
+                    {/* Dropdown for selecting released date order option */}
+                    <Dropdown isOpen={isDropDownOpenDate} toggle={this.toggleDropdownDate} >
+                        <DropdownToggle className="dropdown-date" caret>{selectedOptionDate ? selectedOptionDate : "Order by"}</DropdownToggle>
+                        <DropdownMenu >
+                            {/* Dropdown options */}
+                            <DropdownItem onClick={() => this.handleOptionSelectOrder(DropdownOptionsOrder.NEW)}>{DropdownOptionsOrder.NEW}</DropdownItem>
+                            <DropdownItem onClick={() => this.handleOptionSelectOrder(DropdownOptionsOrder.OLD)}>{DropdownOptionsOrder.OLD}</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
 
                 {/* Render MovieComponent with searched movies */}
                 <div>
