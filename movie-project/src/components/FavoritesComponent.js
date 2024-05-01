@@ -6,11 +6,21 @@ class Favorites extends Component {
     constructor(props) {
         super(props);
 
-        this.setStartDisplayIndex = this.setStartDisplayIndex.bind(this);
+        this.state = {
+            numberOfMoviesPerPage: 8
+        }
+        
+        this.movieComponentRef = React.createRef();
     }
 
-    setStartDisplayIndex(startDisplayIndex) {
-        this.setState({ startDisplayIndex })
+    componentDidUpdate(prevProps) {
+        if (prevProps.favoriteMovies.length !== this.props.favoriteMovies.length) {
+            if (this.props.favoriteMovies.length <= this.state.numberOfMoviesPerPage) {
+                if (this.movieComponentRef.current) {
+                    this.movieComponentRef.current.handlePaginationReset(0);
+                }
+            }
+        }
     }
 
     render() {
@@ -28,6 +38,7 @@ class Favorites extends Component {
                                 addToFavorite={addToFavorite}
                                 removeFromFavorites={removeFromFavorites}
                                 genres={genres}
+                                ref={this.movieComponentRef}
                             />
                             :
                             <div className="center">

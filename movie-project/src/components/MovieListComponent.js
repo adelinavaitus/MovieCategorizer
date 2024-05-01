@@ -37,9 +37,7 @@ class MovieList extends Component {
     };
 
     handleSearch = () => {
-        this.setState({
-            startDisplayIndex: 0
-        })
+        this.movieComponentRef.handlePaginationReset(0);
 
         switch (this.state.selectedOption) {
             case DropdownOptions.TITLE:
@@ -139,6 +137,7 @@ class MovieList extends Component {
                         addToFavorite={addToFavorite}
                         removeFromFavorites={removeFromFavorites}
                         genres={genres}
+                        ref={(ref) => this.movieComponentRef = ref}
                     />
                 </div>
             </div>

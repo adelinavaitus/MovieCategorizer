@@ -10,7 +10,7 @@ class MovieComponent extends Component {
         this.state = {
             selectedMovie: null,
             startDisplayIndex: 0,
-            numberOfMovies: 8
+            numberOfMoviesPerPage: 8
         }
 
         this.toggleModalMovie = this.toggleModalMovie.bind(this);
@@ -28,13 +28,17 @@ class MovieComponent extends Component {
         this.setState({ startDisplayIndex })
     }
 
+    handlePaginationReset = (startDisplayIndex) => {
+        this.setState({ startDisplayIndex });
+    }
+
     render() {
         const selectedMovie = this.state.selectedMovie;
         const { movies, favoriteMovies, addToFavorite, removeFromFavorites, genres } = this.props;
-        const { numberOfMovies, startDisplayIndex } = this.state;
+        const { numberOfMoviesPerPage, startDisplayIndex } = this.state;
 
         const moviesPerPage = movies.filter((movies, index) =>
-            index >= startDisplayIndex && index < startDisplayIndex + numberOfMovies)
+            index >= startDisplayIndex && index < startDisplayIndex + numberOfMoviesPerPage)
 
         // Diveded the movies into groups of 4 
         const movieGroups = moviesPerPage.reduce((resultMovieArray, item, index) => {
@@ -88,11 +92,11 @@ class MovieComponent extends Component {
                 {movieRows}
 
                 {
-                    movies && movies.length > numberOfMovies ?
+                    movies && movies.length > numberOfMoviesPerPage ?
                         <Pagination
                             moviesLength={movies.length}
                             startDisplayIndex={startDisplayIndex}
-                            numberOfMovies={numberOfMovies}
+                            numberOfMoviesPerPage={numberOfMoviesPerPage}
                             setStartDisplayIndex={this.setStartDisplayIndex}
                         />
                         : null
