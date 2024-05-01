@@ -67,8 +67,13 @@
     align-items: center; 
   }
 
+  .favorite-link{
+    margin-right: 5px;
+  }
+
  .favorite-button-heart{
     color: #fe0b0b;
+
  }
 
  .favorite-button{
