@@ -35,6 +35,6 @@ To set up the development environment for the project you can follow these steps
 
 
 
-That's it! You should have the development envirnment set up! 😄
+That's it! You should have the development environment set up! 😄
 
 
