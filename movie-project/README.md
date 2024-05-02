@@ -31,7 +31,7 @@ To set up the development environment for the project you can follow these steps
 ### `npm start`
 
 
-7.  Access the application - you should be able to acces the application by opening a web browser and navigato to the appropiate url: http://localhost:3000
+7.  Access the application - you should be able to acces the application by opening a web browser and navigate to the appropiate url: http://localhost:3000
 
 
 
